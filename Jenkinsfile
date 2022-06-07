@@ -35,7 +35,7 @@
 			 stage('Setting the variables values') {
 				steps {
 					 sh '''#!/bin/bash
-							 sudo bash apijenkins.sh
+							 bash apijenkins.sh
 					 '''
 				}
 			 }
