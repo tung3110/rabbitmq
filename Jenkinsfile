@@ -27,7 +27,11 @@
 					  } 
 				  }
 			 } 
-			 
+			 stage('Cleaning up') { 
+				  steps { 
+					  sh "docker rmi $registry:latest" 
+				  }
+			 }
 			 stage('Setting the variables values') {
 				steps {
 					 sh '''#!/bin/bash
