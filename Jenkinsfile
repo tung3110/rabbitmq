@@ -1,7 +1,7 @@
 	pipeline {
 		 agent any
 		 environment { 
-			  registry = "tung3110/apiHello" 
+			  registry = "tung3110/apihello" 
 			  registryCredential = 'dockerhub_id' 
 			  dockerImage = '' 
 		 }
