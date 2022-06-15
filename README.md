@@ -1,4 +1,4 @@
-1. Cài đặt rbbitmq 
+1. Cài đặt rbbitmq : 
 	sudo docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management
 3. Cài MQTT,Rabbitmq ở máy ảo ubuntu
 4. Chạy file server.py ở máy áo ubuntu. chương trình này có nhiệm vụ nhận lệnh MQTT và publish cho rabbitmq 
