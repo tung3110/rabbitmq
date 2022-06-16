@@ -1,0 +1,60 @@
+Create CA organization
+	• 1.Create ca-key.pem, enter the password like 12345
+			openssl genrsa -out ca-key.pem -des 2048
+	• 2.Create ca-csr.pem
+			openssl req -new -key ca-key.pem -out ca-csr.pem
+	• 3.Create ca-cert.pem
+			openssl x509 -req -in ca-csr.pem -signkey ca-key.pem -out ca-cert.pem
+Create server certificate
+	• 1.Create server-key.pem
+			openssl genrsa -out server-key.pem 2048
+	• 2.Create server-csr.pem
+		create the openssl.cnf file in current directory, content like:
+				[req]  
+					distinguished_name = req_distinguished_name  
+					req_extensions = v3_req  
+
+				[req_distinguished_name]  
+					countryName = Country Name (2 letter code)  
+					countryName_default = CN  
+					stateOrProvinceName = State or Province Name (full name)  
+					stateOrProvinceName_default = BeiJing  
+					localityName = Locality Name (eg, city)  
+					localityName_default = YaYunCun  
+					organizationalUnitName  = Organizational Unit Name (eg, section)  
+					organizationalUnitName_default  = Domain Control Validated  
+					commonName = Internet Widgits Ltd  
+					commonName_max  = 64  
+
+				[ v3_req ]  
+
+				basicConstraints = CA:FALSE  
+					keyUsage = nonRepudiation, digitalSignature, keyEncipherment  
+					subjectAltName = @alt_names  
+
+				[alt_names]  
+
+				IP.1 = 127.0.0.1
+
+then execute:
+			openssl req -new -key server-key.pem -config openssl.cnf -out server-csr.pem
+	• 3.Create server-cert.pem
+			openssl x509 -req -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -in server-csr.pem -out server-cert.pem -extensions v3_req -extfile openssl.cnf
+Create client certificate
+	• 1.Create client-key.pem
+			openssl genrsa -out client-key.pem
+	• 2.Create client-csr.pem
+			openssl req -new -key client-key.pem -out client-csr.pem
+	• 3.Create client-cert.pem
+			openssl x509 -req -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -in client-csr.pem -out client-cert.pem
+
+Các bước cài đặt:
+
+	1. Copy 3 thư mục ca-cert.pem,server-cert.pem, server-key.pem vào thư mục etc/certs
+	2. Sửa file etc/emqx.conf
+		listener.ssl.external = 0.0.0.0:8883
+		listener.ssl.external.keyfile = etc/certs/server-key.pem
+		listener.ssl.external.certfile = etc/certs/server-cert.pem
+		listener.ssl.external.cacertfile = etc/certs/ca-cert.pem
+	3. Đối với Client thì cần phải bổ xung 3 file ca-cert.pem ( bắt buộc), client-cert.pem, client-key.pem.
+	4. Test MQTT bằng phần mềm MQTTX thì cần file ca-cert.pem
