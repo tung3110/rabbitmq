@@ -1,7 +1,7 @@
 from flask import Flask
 import pika, sys, os
 from threading import Timer,Thread,Event
-Broker_local = "192.168.0.2"
+Broker_local = "192.168.0.3"
 app = Flask(__name__)
 Vbat = "Battery: 12v"
 @app.route("/")
